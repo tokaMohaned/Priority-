@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../home_layout.dart';
+import '../../home_layout/home_layout.dart';
 
 class Splash_light extends StatefulWidget {
   static const String routeName="Splshe_light";
