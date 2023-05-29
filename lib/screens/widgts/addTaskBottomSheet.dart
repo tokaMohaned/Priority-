@@ -138,8 +138,8 @@ String selected=DateTime.now().toString().substring(0,10);//default data
         builder: (context,child)=>
         Theme(data: Theme.of(context).copyWith(
           colorScheme: Theme.of(context).colorScheme!.copyWith(
-            primary: lightGreenColor,
-            onPrimary: lightColor,
+            primary: lightColor,
+            onPrimary: greenColor,
               onSurface: Colors.black,
           )
         ), child: child!),
