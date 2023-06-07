@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todo/model/task_model.dart';
+import 'package:todo/shared/network/firbase/firebase_function.dart';
 
 import '../../styles/app-color.dart';
 import '../../styles/app-color.dart';
@@ -16,8 +18,13 @@ class AddTaskBottomSheet extends StatefulWidget {
 class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
 var formKey=GlobalKey<FormState>();
 
-String selected=DateTime.now().toString().substring(0,10);//default data
-  @override
+var selected=DateUtils.dateOnly(DateTime.now());//dateUtils make the time zero
+    //.toString().substring(0,10);//default data
+ var titleController=TextEditingController();
+var descriptionController=TextEditingController();
+
+
+@override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -39,6 +46,7 @@ String selected=DateTime.now().toString().substring(0,10);//default data
               height: 25,
             ),
             TextFormField(
+              controller: titleController,
               textInputAction: TextInputAction.next,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -50,7 +58,7 @@ String selected=DateTime.now().toString().substring(0,10);//default data
                 return null;
               },
               decoration: InputDecoration(
-                label: Text("Task Titile"),
+                label: Text("Task Title"),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: lightColor),
                   borderRadius: BorderRadius.circular(18),
@@ -65,6 +73,7 @@ String selected=DateTime.now().toString().substring(0,10);//default data
               height: 15,
             ),
             TextFormField(
+              controller: descriptionController,
               maxLines: 3,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -103,7 +112,8 @@ String selected=DateTime.now().toString().substring(0,10);//default data
                 chooseDate();
               },
               child: Text(
-               selected,
+               selected.toString().substring(0,10),
+                 //  .substring(0,10),//i will used date time but when write the date use only date
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
@@ -120,6 +130,17 @@ String selected=DateTime.now().toString().substring(0,10);//default data
                 // ),
                 onPressed: () {
                  if(formKey.currentState!.validate())
+                   {
+                     TaskModel task=TaskModel(
+                         title: titleController.text,
+                         description: descriptionController.text,
+                         date: selected.millisecondsSinceEpoch,
+                         status: false);
+                     FireBaeFunctions.addTaskToFirestore(task).then((value)
+                     {
+                       Navigator.pop(context);
+                     });
+                   }
                  //here will be error if it is stateless so i have to make it statful
                 {
                   print("good work");
@@ -148,7 +169,8 @@ String selected=DateTime.now().toString().substring(0,10);//default data
         lastDate: DateTime.now().add(Duration(days: 365)));
       if(selectedDate!=null)
         {
-          selected=selectedDate.toString().substring(0,10);
+          selected=DateUtils.dateOnly(selectedDate);
+          //toString().substring(0,10);
           setState(() {
 
           });
